@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -51,7 +51,6 @@ export default function DataTable() {
     { id: 11, course: "NodeJS", price: 20, rating: 5 },
   ]);
   const [update, setUpdate] = useState(0);
-
   const [searchValue, setSearchValue] = useState("");
   const [filter, setFilter] = useState([]);
 
@@ -71,15 +70,28 @@ export default function DataTable() {
 
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
-    let searched = rows.filter((ser) => {
-      if (ser.course) {
-        return ser.course
+    console.log(searchValue)
+    // let searched = rows.filter((search) => {
+    //   if (search.course) {
+    //     return search.course
+    //       .toLowerCase()
+    //       .includes(searchValue.toLocaleLowerCase());
+    //   }
+    // });
+    // setFilter(searched);
+  };
+
+  useEffect(()=>{
+    let searched = rows.filter((search) => {
+      if (search.course) {
+        return search.course
           .toLowerCase()
           .includes(searchValue.toLocaleLowerCase());
       }
     });
     setFilter(searched);
-  };
+  },[searchValue])
+  
 
   const handleDelete = (id) => {
     let filteredRow = rows.filter((item, index) => {
@@ -92,7 +104,6 @@ export default function DataTable() {
     let sortedRow = rows.sort((a, b) => {
       return a.rating - b.rating;
     });
-    console.log(sortedRow);
     setRows(sortedRow);
     setUpdate((x) => x + 1);
   };
@@ -124,7 +135,10 @@ export default function DataTable() {
                   </TableCell>
                 );
               }
-              return <TableCell>{item}</TableCell>;
+              return <>
+              <TableCell>{item}</TableCell>
+              </>
+
             })}
             <TableCell>
               {" "}
